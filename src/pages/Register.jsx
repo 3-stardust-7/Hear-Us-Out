@@ -129,7 +129,7 @@ const Register = () => {
             htmlFor="image"
             className="block text-sm font-medium text-gray-700"
           >
-            Image of Problem (Optional)
+            Image of Problem
           </label>
           <input
             id="image"

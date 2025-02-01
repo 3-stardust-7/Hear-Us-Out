@@ -1,4 +1,6 @@
 import React from 'react';
+//import { useNavigate } from 'react-router-dom';
+// import {envelope} from './src/assets/envelope-paper.svg'
 import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
