@@ -1,18 +1,24 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import User from "./pages/User";
 import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import User from "./pages/User";
 import Register from "./pages/Register";
-
+import { Routes, Route } from "react-router-dom"; // No BrowserRouter here
+import Authcontext from "./context/authcontext";
 const App = () => {
   return (
-    <>
-      <Routes>
-        <Route path="/users" element={<User />} />
-        <Route path="/" element={<Landing />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </>
+    <div>
+      <Authcontext>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/users" element={<User />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Authcontext>
+    </div>
   );
 };
 
