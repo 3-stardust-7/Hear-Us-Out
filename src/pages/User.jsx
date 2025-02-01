@@ -1,8 +1,10 @@
 import React from 'react'
+import Sidebar from '../components/sidebar';
 
 const User = () => {
   return (
     <>
+    <Sidebar/>
       <div className="h-screen bg-gradient-to-br from-blue-600 to-purple-700">
         <div className="max-w-sm items-center mx-auto bg-purple-500 shadow-lg rounded-lg overflow-hidden">
           <div className="p-6">
