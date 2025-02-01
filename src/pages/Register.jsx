@@ -1,96 +1,184 @@
-import React, { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import supabase from "../supa-client"; // Import Supabase client
+import { useNavigate } from "react-router-dom"; // For redirecting after submit
+import { Auth } from "../context/authcontext";
+import { sendReq } from "../functions/sendReq";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [issue, setIssue] = useState("");
-  const [description, setDescription] = useState("");
+  const [complaintName, setComplaintName] = useState("");
+  const [problemDescription, setProblemDescription] = useState("");
   const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  //const [user, setUser] = useContext(Auth); // Track user state
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   // Use supabase.auth.getSession() instead of session()
+  //   const getSession = async () => {
+  //     const { data: session, error } = await supabase.auth.getSession();
+  //     if (error) {
+  //       console.error("Error getting session:", error);
+  //     } else {
+  //       setUser(session?.user || null); // Set user based on session data
+  //     }
+  //   };
+
+  //   // Call getSession to initialize user
+  //   getSession();
+
+  //   // Listen for authentication state changes
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     ( session) => {
+  //       if (session) {
+  //         setUser(session.user); // Set user data on auth state change
+  //       } else {
+  //         setUser(null); // If logged out, set user to null
+  //       }
+  //     }
+  //   );
+
+  //   // Cleanup listener on unmount
+  //   return () => {
+  //     authListener?.unsubscribe(); // Correctly unsubscribe by calling unsubscribe on the return value of onAuthStateChange
+  //   };
+  // }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setUploading(true); // Simulate uploading process
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("issue", issue);
-    formData.append("description", description);
-    if (image) formData.append("image", image);
+    if (!user) {
+      alert("You must be logged in to submit a complaint!");
+      navigate("/login"); // Redirect to login if no user session
+      return;
+    }
 
-    console.log("Form Submitted:", { name, issue, description, image });
+    setLoading(true);
 
-    // Simulate upload delay
-    setTimeout(() => {
-      setUploading(false);
-      alert("Complaint Submitted Successfully!");
-    }, 2000);
+    try {
+      const userId = user.uid; // Get user ID from session
+
+      // Upload image if provided
+      let imageUrl = null;
+
+      if (image) {
+        // Upload the image to Supabase Storage
+        const { data, error } = await supabase.storage
+          .from("complaint-images")
+          .upload(`images/${image.name}`, image);
+
+        if (error) throw error;
+
+        // If upload successful, assign image path to imageUrl
+        imageUrl = data?.path;
+
+        // Get the public URL of the uploaded image
+        const { publicURL, error: urlError } = supabase.storage
+          .from("complaint-images")
+          .getPublicUrl(imageUrl);
+
+        if (urlError) throw urlError;
+
+        imageUrl = publicURL; // Update imageUrl with the public URL
+      }
+
+      // Insert the complaint into the database
+      const { error } = await supabase.from("complaints").insert([
+        {
+          name: complaintName,
+          description: problemDescription,
+          image: imageUrl, // Store the image URL in the database
+          u_id: userId, // User ID
+        },
+      ]);
+
+      if (error) {
+        console.error("Error inserting complaint:", error);
+      } else {
+        console.log("Complaint successfully added!");
+      }
+
+      alert("Complaint registered successfully!");
+      const response = await sendReq();
+      navigate("/users"); // Redirect after submitting
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+      alert("Error submitting complaint.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleFileChange = (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-  };
-
-  const triggerFileInput = () => {
-    document.getElementById("fileInput").click();
+    if (file) {
+      setImage(file);
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-4 mt-10">
-      <h2 className="text-2xl font-bold text-center text-gray-800">
-        Register a Complaint
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          id="name"
-          placeholder="User Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        <input
-          type="text"
-          id="issue"
-          placeholder="Issue Name"
-          value={issue}
-          onChange={(e) => setIssue(e.target.value)}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        <textarea
-          id="description"
-          placeholder="Describe your issue"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows="4"
-          required
-        ></textarea>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Register Complaint</h2>
+      <form className="space-y-4">
+        <div>
+          <label
+            htmlFor="complaintName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Complaint Name
+          </label>
+          <input
+            id="complaintName"
+            type="text"
+            value={complaintName}
+            onChange={(e) => setComplaintName(e.target.value)}
+            required
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-        <input
-          type="file"
-          id="fileInput"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <button
-          type="button"
-          onClick={triggerFileInput}
-          className="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition"
-        >
-          {image ? image.name : "Upload Image"}
-        </button>
+        <div>
+          <label
+            htmlFor="problemDescription"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Problem Description
+          </label>
+          <textarea
+            id="problemDescription"
+            value={problemDescription}
+            onChange={(e) => setProblemDescription(e.target.value)}
+            required
+            rows="4"
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-          disabled={uploading}
-        >
-          {uploading ? "Uploading..." : "Submit Complaint"}
-        </button>
+        <div>
+          <label
+            htmlFor="image"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Image of Problem (Optional)
+          </label>
+          <input
+            id="image"
+            type="file"
+            onChange={handleImageChange}
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            disabled={loading}
+            onClick={handleSubmit}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300"
+          >
+            {loading ? "Submitting..." : "Submit Complaint"}
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -6,7 +6,6 @@ const User = () => {
   return (
     <>
     <Sidebar/>
-    <Register/>
      
     </>
   );
