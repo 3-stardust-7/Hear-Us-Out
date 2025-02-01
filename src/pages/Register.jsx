@@ -9,40 +9,10 @@ const Register = () => {
   const [problemDescription, setProblemDescription] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  //const [user, setUser] = useContext(Auth); // Track user state
+  const [user, setUser] = useContext(Auth); // Track user state
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Use supabase.auth.getSession() instead of session()
-  //   const getSession = async () => {
-  //     const { data: session, error } = await supabase.auth.getSession();
-  //     if (error) {
-  //       console.error("Error getting session:", error);
-  //     } else {
-  //       setUser(session?.user || null); // Set user based on session data
-  //     }
-  //   };
-
-  //   // Call getSession to initialize user
-  //   getSession();
-
-  //   // Listen for authentication state changes
-  //   const { data: authListener } = supabase.auth.onAuthStateChange(
-  //     ( session) => {
-  //       if (session) {
-  //         setUser(session.user); // Set user data on auth state change
-  //       } else {
-  //         setUser(null); // If logged out, set user to null
-  //       }
-  //     }
-  //   );
-
-  //   // Cleanup listener on unmount
-  //   return () => {
-  //     authListener?.unsubscribe(); // Correctly unsubscribe by calling unsubscribe on the return value of onAuthStateChange
-  //   };
-  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
