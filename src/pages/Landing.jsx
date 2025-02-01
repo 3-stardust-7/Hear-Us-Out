@@ -21,17 +21,17 @@ const Landing = () => {
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ5bu33Z6wMz8hTxkcbPhYZQ4eFnuObJfrOA&s"
               alt="Bootstrap"
-              width="84"
+              width="104"
               height="80"
             />
           </a>
         </div>
       </nav>
 
-      <div className="px-4 pt-5 my-5 text-center border-bottom container">
-        <h1 className="display-4 fw-bold text-body-emphasis">HearUsOut</h1>
+      <div className="px-4 pt-2 my-5 text-center border-bottom container">
+        <h1 className="display-2 fw-bold text-body-emphasis">HearUsOut</h1>
         <div className="col-lg-6 mx-auto">
-          <p className="lead mb-4">
+          <p className="lead mb-4 fs-4">
             Whether it’s a broken road, power outage, or unresolved complaint,
             we make reporting problems easy and ensure they reach the right
             authorities. Track updates in real time, support community issues,
@@ -41,7 +41,7 @@ const Landing = () => {
             <button
               onClick={handleClick}
               type="button"
-              className="btn btn-primary btn-lg px-4 me-sm-3"
+              className="btn btn-primary btn-lg px-4 me-sm-3 mb-5 bg-black"
             >
               Get Started!
             </button>
@@ -56,7 +56,7 @@ const Landing = () => {
         <div className="row g-4 py-5 row-cols-1 row-cols-lg-3 justify-content-center">
           <div className="feature col text-center">
             <div
-              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-black fs-2 mb-3"
               style={{ width: "4rem", height: "4rem", borderRadius: "0.75rem" }}
             >
                 <svg
@@ -78,7 +78,7 @@ const Landing = () => {
 
           <div className="feature col text-center">
             <div
-              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-black fs-2 mb-3"
               style={{ width: "4rem", height: "4rem", borderRadius: "0.75rem" }}
             >
                 <svg
@@ -100,7 +100,7 @@ const Landing = () => {
 
           <div className="feature col text-center">
             <div
-              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+              className="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-black fs-2 mb-3"
               style={{ width: "4rem", height: "4rem", borderRadius: "0.75rem" }}
             >
                 <svg
