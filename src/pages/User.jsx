@@ -1,14 +1,16 @@
-import React from 'react'
-import Register from './Register';
-import Sidebar from '../components/sidebar';
+import React from "react";
+import Sidebar from "../components/sidebar";
+import Cards from "../components/cards";
 
 const User = () => {
   return (
-    <>
-    <Sidebar/>
-     
-    </>
+    <div className="flex">
+      <Sidebar />
+      <div className="p-4 w-full">
+        <Cards />
+      </div>
+    </div>
   );
-}
+};
 
-export default User
+export default User;
