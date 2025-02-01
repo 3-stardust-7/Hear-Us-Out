@@ -1,5 +1,5 @@
 import { useState } from "react";
-//import { auth, signOut } from "../config/firebase"; // Import signOut from Firebase Auth
+import { auth, signOut } from "../config/firebase"; // Import signOut from Firebase Auth
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const Sidebar = () => {

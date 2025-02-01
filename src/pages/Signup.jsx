@@ -21,6 +21,8 @@ const Signup = () => {
     phone: "",
   });
   const [loading, setLoading] = useState(false);
+  const [userType, setUserType] = useState("User"); // Add this
+
   const navigate = useNavigate(); // useNavigate hook for redirecting
 
   const handleGoogleSignup = async () => {
@@ -93,6 +95,8 @@ const Signup = () => {
           password: userDetails.password, // For email auth
           address: userDetails.address,
           phone: phoneIsValid ? userDetails.phone : null,
+          user_type: userType, // Store user type
+          identifier: userDetails.identifier, // Store Aadhar or DARPAN ID
           is_active: true,
         },
       ]);
@@ -178,6 +182,53 @@ const Signup = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+            </div>
+
+            {/* Dropdown for selecting User Type */}
+            <div>
+              <select
+                value={userType}
+                onChange={(e) => {
+                  setUserType(e.target.value);
+                  setUserDetails({ ...userDetails, identifier: "" }); // Reset ID field when switching
+                }}
+                className="w-full px-4 py-2 mt-2 mb-4 border rounded-lg"
+                required
+              >
+                <option value="User">User</option>
+                <option value="NGO">NGO</option>
+              </select>
+
+              {/* Conditional input fields based on selection */}
+              {userType === "User" ? (
+                <input
+                  type="number"
+                  placeholder="Aadhar ID"
+                  value={userDetails.identifier}
+                  onChange={(e) =>
+                    setUserDetails({
+                      ...userDetails,
+                      identifier: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2  mb-4 border rounded-lg"
+                  required
+                />
+              ) : (
+                <input
+                  type="text"
+                  placeholder="DARPAN ID"
+                  value={userDetails.identifier}
+                  onChange={(e) =>
+                    setUserDetails({
+                      ...userDetails,
+                      identifier: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 mb-4 border rounded-lg"
+                  required
+                />
+              )}
             </div>
 
             {/* Submit Button */}

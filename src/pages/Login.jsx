@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom"; // React Router for navigation
 import { ToastContainer, toast } from "react-toastify"; // Toast notifications
 import "react-toastify/dist/ReactToastify.css"; // Toast styles
 import { Auth } from "../context/authcontext";
-
-
 const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Hook for navigation
