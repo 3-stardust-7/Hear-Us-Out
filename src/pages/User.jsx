@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
-import Cards from "../components/cards";
+import Cards from "../components/Cards";
 import Profile from "../components/profile";
 import w from "../assets/w.png"
 
