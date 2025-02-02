@@ -9,6 +9,7 @@ import {
 import supabase from "../supa-client"; // Supabase imports
 import { ToastContainer, toast } from "react-toastify"; // Import Toast components
 import "react-toastify/dist/ReactToastify.css"; // Import Toast styles
+import image from "../assets/image.jpg";
 
 const Signup = () => {
   const [error, setError] = useState("");
@@ -120,7 +121,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div
+          className="min-h-screen bg-cover bg-fixed bg-center"
+          style={{
+            backgroundImage: `url(${image})`,
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            backgroundBlendMode: "overlay",
+            
+          }}
+        >
+    <div className="flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Create an Account
@@ -324,6 +334,7 @@ const Signup = () => {
 
       {/* Toast notifications */}
       <ToastContainer />
+    </div>
     </div>
   );
 };
