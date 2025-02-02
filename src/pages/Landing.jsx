@@ -197,6 +197,7 @@ import React from "react";
 // import {envelope} from './src/assets/envelope-paper.svg'
 import { useNavigate } from "react-router-dom";
 import purple from "../assets/bw.png";
+import { motion } from "framer-motion";
 
 const Landing = () => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -224,14 +225,17 @@ const Landing = () => {
             <a className="navbar-brand" href="###">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ5bu33Z6wMz8hTxkcbPhYZQ4eFnuObJfrOA&s"
-                alt="Bootstrap"
+                alt="Microphone"
                 width="104"
                 height="80"
               />
             </a>
           </div>
         </div>
-        <div className="px-4 font-bold pt-2 my-5 text-center border-bottom container">
+        <motion.div className="px-4 font-bold pt-2 my-5 text-center border-bottom container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}>
           <h1 className="display-2 fw-bold text-body-emphasis">HearUsOut</h1>
           <div className="col-lg-6 mx-auto">
             <p className="lead mb-4 font-bold fs-4">
@@ -250,7 +254,7 @@ const Landing = () => {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
         <div
           className="container d-flex justify-content-center align-items-center"
           style={{ minHeight: "50vh" }}
@@ -276,8 +280,8 @@ const Landing = () => {
                   <path d="M4 0a2 2 0 0 0-2 2v1.133l-.941.502A2 2 0 0 0 0 5.4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5.4a2 2 0 0 0-1.059-1.765L14 3.133V2a2 2 0 0 0-2-2zm10 4.267.47.25A1 1 0 0 1 15 5.4v.817l-1 .6zm-1 3.15-3.75 2.25L8 8.917l-1.25.75L3 7.417V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm-11-.6-1-.6V5.4a1 1 0 0 1 .53-.882L2 4.267zm13 .566v5.734l-4.778-2.867zm-.035 6.88A1 1 0 0 1 14 15H2a1 1 0 0 1-.965-.738L8 10.083zM1 13.116V7.383l4.778 2.867L1 13.117Z" />
                 </svg>
               </div>
-              <h3 className="fs-2 text-body-emphasis">Quick Reporting</h3>
-              <p>
+              <h3 className="fs-3 text-body-emphasis">Quick Reporting</h3>
+              <p className="fs-5">
                 Submit your civic issues with ease and stay updated on their
                 resolution status, all in one place
               </p>
@@ -303,8 +307,8 @@ const Landing = () => {
                   <path d="M4 0a2 2 0 0 0-2 2v1.133l-.941.502A2 2 0 0 0 0 5.4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5.4a2 2 0 0 0-1.059-1.765L14 3.133V2a2 2 0 0 0-2-2zm10 4.267.47.25A1 1 0 0 1 15 5.4v.817l-1 .6zm-1 3.15-3.75 2.25L8 8.917l-1.25.75L3 7.417V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm-11-.6-1-.6V5.4a1 1 0 0 1 .53-.882L2 4.267zm13 .566v5.734l-4.778-2.867zm-.035 6.88A1 1 0 0 1 14 15H2a1 1 0 0 1-.965-.738L8 10.083zM1 13.116V7.383l4.778 2.867L1 13.117Z" />
                 </svg>
               </div>
-              <h3 className="fs-2 text-body-emphasis">Verified Action</h3>
-              <p>
+              <h3 className="fs-3 text-body-emphasis">Verified Action</h3>
+              <p className="fs-5">
                 Complaints are verified by trusted NGOs, ensuring only
                 legitimate issues are addressed with full transparency
               </p>
@@ -330,8 +334,8 @@ const Landing = () => {
                   <path d="M4 0a2 2 0 0 0-2 2v1.133l-.941.502A2 2 0 0 0 0 5.4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5.4a2 2 0 0 0-1.059-1.765L14 3.133V2a2 2 0 0 0-2-2zm10 4.267.47.25A1 1 0 0 1 15 5.4v.817l-1 .6zm-1 3.15-3.75 2.25L8 8.917l-1.25.75L3 7.417V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1zm-11-.6-1-.6V5.4a1 1 0 0 1 .53-.882L2 4.267zm13 .566v5.734l-4.778-2.867zm-.035 6.88A1 1 0 0 1 14 15H2a1 1 0 0 1-.965-.738L8 10.083zM1 13.116V7.383l4.778 2.867L1 13.117Z" />
                 </svg>
               </div>
-              <h3 className="fs-2 text-body-emphasis">Instant Updates</h3>
-              <p>
+              <h3 className="fs-3 text-body-emphasis">Instant Updates</h3>
+              <p className="fs-5">
                 Track the progress of your complaint in real-time, with timely
                 notifications on government actions and resolutions
               </p>
