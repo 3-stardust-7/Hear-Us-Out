@@ -2,13 +2,23 @@ import React from "react";
 import Sidebar from "../components/sidebar";
 import Cards from "../components/cards";
 import Profile from "../components/profile";
+import w from "../assets/w.png"
 
 const User = () => {
   return (
-    <div className="flex">
+    <div
+      className="min-h-screen bg-cover bg-fixed bg-center "
+      style={{
+        backgroundImage: `url(${w})`,
+        backgroundColor: "rgba(255, 255, 255, 0.25)", // Transparent white overlay
+        backgroundBlendMode: "overlay", // Combine the image and color
+      }}
+    >
       <Sidebar />
-      <Profile />
-      <div className="p-4 w-full">
+      <div className="">
+        <Profile />
+      </div>
+      <div className="p-4 w-2/3 mx-auto">
         <Cards />
       </div>
     </div>
@@ -16,3 +26,4 @@ const User = () => {
 };
 
 export default User;
+

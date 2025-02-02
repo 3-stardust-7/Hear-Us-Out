@@ -47,7 +47,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`fixed border-10 rounded-4xl top-[7%] left-0 h-[90%] bg-blue-300 text-white transition-all duration-300 ease-in-out flex flex-col
+      className={`fixed border-10 rounded-4xl top-[7%] left-0 h-[90%] bg-black text-white transition-all duration-300 ease-in-out flex flex-col
         ${isOpen ? "w-64" : "w-15"}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -59,11 +59,9 @@ const Sidebar = () => {
             //onClick={handleHome}
             className="hover:bg-gray-700 p-2 rounded cursor-pointer"
           >
-            Home
+            Complaints
           </li>
-          <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
-            Fulfilled
-          </li>
+         
           <li
             onClick={handleReg}
             className="hover:bg-gray-700 p-2 rounded cursor-pointer"

@@ -16,27 +16,26 @@ const Cards = () => {
   }, []);
 
   const getScoreColor = (score) => {
-    if (score >= 8) return "bg-red-500";
-    if (score >= 5) return "bg-yellow-400";
-    return "bg-green-500";
+    if (score >= 8) return "bg-black";
+    if (score >= 5) return "bg-black";
+    return "bg-black";
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <h2 className="text-4xl font-bold text-gray-800 text-center mb-8">
+    <div className=" max-3/4 mx-auto p-4">
+      <div className="text-5xl mb-20 font-bold text-white text-center">
         Complaint Records
-      </h2>
+      </div>
       {complaints.length === 0 ? (
-        <p className="text-center text-xl text-gray-500">
+        <p className="text-center pb-4 mb-20 text-xl text-gray-500">
           No complaints found.
         </p>
       ) : (
-        <div className="grid gap-5 ">
+        <div className="grid mt-20 gap-5 ">
           {complaints.map((complaint) => (
-            
             <div
               key={complaint.id}
-              className="bg-gray-400 p-5 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-1 min-h-[250px] relative overflow-hidden"
+              className="bg-gradient-to-b  from-gray-300 to-white p-5 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-1 min-h-[250px] relative overflow-hidden"
             >
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
                 {complaint.name}
@@ -48,7 +47,7 @@ const Cards = () => {
                 <div
                   className={`${getScoreColor(
                     complaint.score
-                  )} text-white font-bold py-2 px-4 rounded-md absolute top-4 right-4 transform rotate-45 origin-top-right`}
+                  )} text-white font-bold py-3 px-4 rounded-md absolute top-4 right-4 transform origin-top-right`}
                 >
                   {complaint.score}
                 </div>
