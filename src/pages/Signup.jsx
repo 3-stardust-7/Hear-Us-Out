@@ -17,10 +17,12 @@ const Signup = () => {
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
-    name: "", // Added name field
+    name: "",
     address: "",
     phone: "",
+    identifier: "", // Ensure identifier is always controlled
   });
+
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("User"); // Add this
 
@@ -55,12 +57,12 @@ const Signup = () => {
     setError("");
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
+       await createUserWithEmailAndPassword(
         auth,
         userDetails.email,
         userDetails.password
       );
-      const user = userCredential.user;
+      //const user = userCredential.user;
 
       // Successfully created user with email/password, now ask for address & phone
       toast.success("Email Sign-up successful! Please complete your details.");

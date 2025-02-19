@@ -34,7 +34,7 @@ const Cards = () => {
         <div className="grid mt-20 gap-5 ">
           {complaints.map((complaint) => (
             <div
-              key={complaint.id}
+              key={complaint.SLno}
               className="bg-gradient-to-b  from-gray-300 to-white p-5 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-1 min-h-[250px] relative overflow-hidden"
             >
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
@@ -52,11 +52,11 @@ const Cards = () => {
                   {complaint.score}
                 </div>
               )}
-              {complaint.image_url && (
+              {complaint.image && (
                 <img
-                  src={complaint.image_url}
+                  src={complaint.image}
                   alt="Complaint Image"
-                  className="w-full h-auto rounded-md mt-4"
+                  className="h-96 rounded-md mt-4"
                 />
               )}
             </div>
