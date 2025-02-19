@@ -1,3 +1,6 @@
-venv
-env
+# Virtual environments
+venv/
+env/
+
+# Sentiment model directory
 sentiment_model/
