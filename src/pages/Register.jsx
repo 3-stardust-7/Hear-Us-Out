@@ -13,7 +13,6 @@
 
 //   const navigate = useNavigate();
 
-
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 
@@ -158,116 +157,82 @@
 
 
 
-import { useState, useContext, useEffect } from "react";
-import supabase from "../supa-client"; // Import Supabase client
-import { useNavigate } from "react-router-dom"; // For redirecting after submit
+
+
+
+
+import { useState, useContext, useEffect, useRef } from "react";
+import supabase from "../supa-client";
+import { useNavigate } from "react-router-dom";
 import { Auth } from "../context/authcontext";
-import { motion } from "framer-motion"; // Import Framer Motion
-import registerbg from "../assets/registerbg.png"; // Background image
+import { motion } from "framer-motion";
+import registerbg from "../assets/registerbg.png";
 
 const Register = () => {
   const [complaintName, setComplaintName] = useState("");
   const [problemDescription, setProblemDescription] = useState("");
-  const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useContext(Auth); // Track user state
-
+  const [dataUri, setDataUri] = useState("");
+  const [user] = useContext(Auth);
+  const canvasRef = useRef(null); // ✅ Added canvasRef
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: session, error } = await supabase.auth.getSession();
-      if (error || !session?.session?.user) {
-        console.log("No active session. Redirecting to login...");
-        navigate("/login");
-      } else {
-        setUser(session.session.user);
-        console.log("User authenticated:", session.session.user);
-      }
-    };
+    if (!user) {
+      console.log("User not authenticated. Redirecting...");
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
-    fetchSession();
-  }, []);
+  if (!user) return null;
 
+  const readImageAsDataUri = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
 
-  if (window.opener) {
-    window.close();
-  } else {
-    console.warn("Cannot close window: window.opener is null");
-  }
+        img.onload = () => {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext("2d");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          const uri = canvas.toDataURL("image/png");
+          resolve(uri);
+        };
+
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!user) {
-      alert("You must be logged in to submit a complaint!");
-      navigate("/login");
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // ✅ Check user session before proceeding
-      const { data: session, error: sessionError } =
-        await supabase.auth.getSession();
-      console.log("User session:", session);
+      const fileInput = document.getElementById("image");
+      const file = fileInput.files[0];
+      let imageUri = null;
 
-      if (sessionError || !session?.session?.user) {
-        alert("Authentication error. Please log in again.");
-        setLoading(false);
-        navigate("/login");
-        return;
+      if (file) {
+        imageUri = await readImageAsDataUri(file); // ✅ Wait for image to be processed
+        setDataUri(imageUri);
       }
 
-      const userId = session.session.user.id;
-      let imageUrl = null;
-
-      if (image) {
-        if (!(image instanceof File)) {
-          alert("Invalid image file. Please upload a valid image.");
-          setLoading(false);
-          return;
-        }
-
-        // ✅ Generate a unique filename
-        const fileName = `${Date.now()}_${image.name}`;
-        console.log("Uploading file:", fileName);
-
-        // ✅ Attempt upload
-        const { data, error } = await supabase.storage
-          .from("complaint-images")
-          .upload(`public/${fileName}`, image, {
-            cacheControl: "3600",
-            upsert: false,
-          });
-
-        if (error) {
-          console.error("Upload error:", error);
-          throw error;
-        }
-
-        // ✅ Get the public URL
-        imageUrl = supabase.storage
-          .from("complaint-images")
-          .getPublicUrl(`public/${fileName}`).publicUrl;
-        console.log("Image uploaded successfully:", imageUrl);
-      }
-
-      // ✅ Insert into complaints table
       const { error: insertError } = await supabase.from("complaints").insert([
         {
           name: complaintName,
           description: problemDescription,
-          image: imageUrl,
-          u_id: userId,
+          image: imageUri, // ✅ Using the processed image URI
+          u_id: user.uid,
         },
       ]);
 
-      if (insertError) {
-        console.error("Insert error:", insertError);
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
       alert("Complaint registered successfully!");
       navigate("/users");
@@ -276,13 +241,6 @@ const Register = () => {
       alert("Error submitting complaint.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the selected file
-    if (file) {
-      setImage(file); // Store the file in state
     }
   };
 
@@ -312,7 +270,7 @@ const Register = () => {
           </motion.h2>
 
           <motion.form className="space-y-4">
-            <motion.div className="hover:scale-105 transition-transform duration-300">
+            <motion.div>
               <label
                 htmlFor="complaintName"
                 className="block text-sm font-medium text-gray-700"
@@ -330,7 +288,7 @@ const Register = () => {
               />
             </motion.div>
 
-            <motion.div className="hover:scale-105 transition-transform duration-300">
+            <motion.div>
               <label
                 htmlFor="problemDescription"
                 className="block text-sm font-medium text-gray-700"
@@ -348,7 +306,7 @@ const Register = () => {
               />
             </motion.div>
 
-            <motion.div className="hover:scale-105 transition-transform duration-300">
+            <motion.div>
               <label
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
@@ -358,13 +316,13 @@ const Register = () => {
               <input
                 id="image"
                 type="file"
-                accept="image/png, image/jpeg" // Only allow PNG/JPG files
-                onChange={handleImageChange}
+                accept="image/png, image/jpeg"
                 className="w-full mt-2 p-2 border border-gray-300 rounded-md"
               />
+              <canvas ref={canvasRef} style={{ display: "none" }} />
             </motion.div>
 
-            <motion.div className="hover:scale-105 transition-transform duration-300">
+            <motion.div>
               <button
                 type="submit"
                 disabled={loading}
@@ -382,9 +340,6 @@ const Register = () => {
 };
 
 export default Register;
-
-
-
 
 
 
@@ -496,16 +451,12 @@ export default Register;
 //   }
 // };
 
-
-
 //   const handleImageChange = (e) => {
 //     const file = e.target.files[0]; // Get the selected file
 //     if (file) {
 //       setImage(file); // Store the file in state
 //     }
 //   };
-
-
 
 //   return (
 //     <div

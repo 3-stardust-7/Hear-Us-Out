@@ -4,6 +4,13 @@ env/
 .venv/
 .env/
 
+# Root .env
+.env
+
+# Backend .env
+/Backend/.env
+
+
 # Logs
 logs
 *.log
