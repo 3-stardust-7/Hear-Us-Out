@@ -152,6 +152,246 @@
 //     </div>
 //   );
 // };
+// export default Register;
+
+
+//2 second!!!!
+
+// import { useState, useContext, useEffect, useRef } from "react";
+// import supabase from "../supa-client";
+// import { useNavigate } from "react-router-dom";
+// import { Auth } from "../context/authcontext";
+// import { motion } from "framer-motion";
+// import registerbg from "../assets/registerbg.png";
+// import { v4 as uuidv4 } from "uuid";
+
+// const Register = () => {
+//   const [complaintName, setComplaintName] = useState("");
+//   const [problemDescription, setProblemDescription] = useState("");
+//   // const [image, setImage] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   //const [dataUri, setDataUri] = useState("");
+//   const [user] = useContext(Auth);
+//   const canvasRef = useRef(null); // ✅ Added canvasRef
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     if (!user) {
+//       console.log("User not authenticated. Redirecting...");
+//       navigate("/login");
+//     }
+//   }, [user, navigate]);
+
+//   if (!user) return null;
+
+//   // const readImageAsDataUri = (file) =>
+//   //   new Promise((resolve, reject) => {
+//   //     const reader = new FileReader();
+//   //     reader.onload = (e) => {
+//   //       const img = new Image();
+//   //       img.src = e.target.result;
+
+//   //       img.onload = () => {
+//   //         const canvas = canvasRef.current;
+//   //         const ctx = canvas.getContext("2d");
+//   //         canvas.width = img.width;
+//   //         canvas.height = img.height;
+//   //         ctx.drawImage(img, 0, 0);
+//   //         const uri = canvas.toDataURL("image/png");
+//   //         resolve(uri);
+//   //       };
+
+//   //       img.onerror = reject;
+//   //     };
+//   //     reader.onerror = reject;
+//   //     reader.readAsDataURL(file);
+//   //   });
+
+//   // const handleSubmit = async (e) => {
+//   //   e.preventDefault();
+//   //   setLoading(true);
+
+//   //   let file = e.target.files[0];
+
+//   //   const { data, error } = await supabase.storage
+//   //     .from("complaint-images")
+//   //     .upload(user + "/" + uuidv4(), file);
+
+//   //   if (data) {
+//   //     getImage();
+//   //   } else {
+//   //     console.error(error);
+//   //   }
+
+//   //   //   try {
+//   //   //     const fileInput = document.getElementById("image");
+//   //   //     const file = fileInput.files[0];
+//   //   //     let imageUri = null;
+
+//   //   //     if (file) {
+//   //   //       imageUri = await readImageAsDataUri(file); // Wait for image to be processed
+//   //   //       setDataUri(imageUri);
+//   //   //     }
+
+//   //       const { error: insertError } = await supabase.from("complaints").insert([
+//   //         {
+//   //           name: complaintName,
+//   //           description: problemDescription,
+//   //           u_id: user.uid,
+//   //         },
+//   //       ]);
+
+//   //   //     if (insertError) throw insertError;
+
+//   //   //     alert("Complaint registered successfully!");
+//   //   //     navigate("/users");
+//   //   //   } catch (error) {
+//   //   //     console.error("Error submitting complaint:", error);
+//   //   //     alert("Error submitting complaint.");
+//   //   //   } finally {
+//   //   //     setLoading(false);
+//   //   //   }
+//   // };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       const fileInput = document.getElementById("image");
+//       const file = fileInput.files[0];
+
+//       if (!file) {
+//         alert("Please upload an image.");
+//         setLoading(false);
+//         return;
+//       }
+
+//       const filePath = `${user.uid}/${uuidv4()}`;
+//       const { data, error } = await supabase.storage
+//         .from("complaint-images")
+//         .upload(filePath, file);
+
+//       if (error) throw error;
+
+//       const imageUrl = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/complaint-images/${filePath}`;
+
+//       const { error: insertError } = await supabase.from("complaints").insert([
+//         {
+//           name: complaintName,
+//           description: problemDescription,
+//           u_id: user.uid,
+//           image: imageUrl, // ✅ Storing image path
+//         },
+//       ]);
+
+//       if (insertError) throw insertError;
+
+//       alert("Complaint registered successfully!");
+//       navigate("/users");
+//     } catch (err) {
+//       console.error("Error submitting complaint:", err);
+//       console.error("User object:", user);
+//       alert("Error submitting complaint.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="min-h-screen bg-cover bg-fixed bg-center"
+//       style={{
+//         backgroundImage: `url(${registerbg})`,
+//         backgroundColor: "rgba(255, 255, 255, 0.85)",
+//         backgroundBlendMode: "overlay",
+//       }}
+//     >
+//       <div className="flex items-center justify-center min-h-screen bg-transparent">
+//         <motion.div
+//           className="max-w-md w-full p-6 bg-white shadow-lg rounded-lg"
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ duration: 0.5 }}
+//         >
+//           <motion.h2
+//             className="text-2xl font-bold mb-4 text-center"
+//             initial={{ y: -20, opacity: 0 }}
+//             animate={{ y: 0, opacity: 1 }}
+//             transition={{ duration: 0.5 }}
+//           >
+//             Register Complaint
+//           </motion.h2>
+
+//           <motion.form className="space-y-4">
+//             <motion.div>
+//               <label
+//                 htmlFor="complaintName"
+//                 className="block text-sm font-medium text-gray-700"
+//               >
+//                 Complaint Name
+//               </label>
+//               <input
+//                 id="complaintName"
+//                 type="text"
+//                 placeholder="Name of complaint"
+//                 value={complaintName}
+//                 onChange={(e) => setComplaintName(e.target.value)}
+//                 required
+//                 className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+//               />
+//             </motion.div>
+
+//             <motion.div>
+//               <label
+//                 htmlFor="problemDescription"
+//                 className="block text-sm font-medium text-gray-700"
+//               >
+//                 Problem Description
+//               </label>
+//               <textarea
+//                 id="problemDescription"
+//                 value={problemDescription}
+//                 placeholder="Clear description of complaint"
+//                 onChange={(e) => setProblemDescription(e.target.value)}
+//                 required
+//                 rows="4"
+//                 className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+//               />
+//             </motion.div>
+
+//             <motion.div>
+//               <label
+//                 htmlFor="image"
+//                 className="block text-sm font-medium text-gray-700"
+//               >
+//                 Upload Image
+//               </label>
+//               <input
+//                 id="image"
+//                 type="file"
+//                 accept="image/png, image/jpeg"
+//                 className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+//               />
+//               <canvas ref={canvasRef} style={{ display: "none" }} />
+//             </motion.div>
+
+//             <motion.div>
+//               <button
+//                 type="submit"
+//                 disabled={loading}
+//                 onClick={handleSubmit}
+//                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300"
+//               >
+//                 {loading ? "Submitting..." : "Submit Complaint"}
+//               </button>
+//             </motion.div>
+//           </motion.form>
+//         </motion.div>
+//       </div>
+//     </div>
+//   );
+// };
 
 // export default Register;
 
@@ -161,53 +401,36 @@
 
 
 
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import supabase from "../supa-client";
 import { useNavigate } from "react-router-dom";
-import { Auth } from "../context/authcontext";
 import { motion } from "framer-motion";
 import registerbg from "../assets/registerbg.png";
+import { v4 as uuidv4 } from "uuid";
 
 const Register = () => {
   const [complaintName, setComplaintName] = useState("");
   const [problemDescription, setProblemDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [dataUri, setDataUri] = useState("");
-  const [user] = useContext(Auth);
-  const canvasRef = useRef(null); // ✅ Added canvasRef
+  const [user, setUser] = useState(null);
+  const canvasRef = useRef(null);
   const navigate = useNavigate();
 
+  // 🔑 Fetch user from Supabase session
   useEffect(() => {
-    if (!user) {
-      console.log("User not authenticated. Redirecting...");
-      navigate("/login");
-    }
-  }, [user, navigate]);
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        console.log("User not authenticated. Redirecting...");
+        navigate("/login");
+      } else {
+        setUser(data.user);
+      }
+    };
+    fetchUser();
+  }, [navigate]);
 
   if (!user) return null;
-
-  const readImageAsDataUri = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-
-        img.onload = () => {
-          const canvas = canvasRef.current;
-          const ctx = canvas.getContext("2d");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          const uri = canvas.toDataURL("image/png");
-          resolve(uri);
-        };
-
-        img.onerror = reject;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,19 +439,30 @@ const Register = () => {
     try {
       const fileInput = document.getElementById("image");
       const file = fileInput.files[0];
-      let imageUri = null;
 
-      if (file) {
-        imageUri = await readImageAsDataUri(file); // ✅ Wait for image to be processed
-        setDataUri(imageUri);
+      if (!file) {
+        alert("Please upload an image.");
+        setLoading(false);
+        return;
       }
+
+      const filePath = `${user.id}/${uuidv4()}`;
+      const { error: uploadError } = await supabase.storage
+        .from("complaint-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const imageUrl = `${
+        import.meta.env.VITE_SUPABASE_URL
+      }/storage/v1/object/public/complaint-images/${filePath}`;
 
       const { error: insertError } = await supabase.from("complaints").insert([
         {
           name: complaintName,
           description: problemDescription,
-          image: imageUri, // ✅ Using the processed image URI
-          u_id: user.uid,
+          u_id: user.id, // ✅ Supabase user ID
+          image: imageUrl,
         },
       ]);
 
@@ -236,8 +470,8 @@ const Register = () => {
 
       alert("Complaint registered successfully!");
       navigate("/users");
-    } catch (error) {
-      console.error("Error submitting complaint:", error);
+    } catch (err) {
+      console.error("Error submitting complaint:", err);
       alert("Error submitting complaint.");
     } finally {
       setLoading(false);
@@ -269,7 +503,7 @@ const Register = () => {
             Register Complaint
           </motion.h2>
 
-          <motion.form className="space-y-4">
+          <motion.form className="space-y-4" onSubmit={handleSubmit}>
             <motion.div>
               <label
                 htmlFor="complaintName"
@@ -317,6 +551,7 @@ const Register = () => {
                 id="image"
                 type="file"
                 accept="image/png, image/jpeg"
+                required
                 className="w-full mt-2 p-2 border border-gray-300 rounded-md"
               />
               <canvas ref={canvasRef} style={{ display: "none" }} />
@@ -326,7 +561,6 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                onClick={handleSubmit}
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300"
               >
                 {loading ? "Submitting..." : "Submit Complaint"}
@@ -340,7 +574,6 @@ const Register = () => {
 };
 
 export default Register;
-
 
 
 

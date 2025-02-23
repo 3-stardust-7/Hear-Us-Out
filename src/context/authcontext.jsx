@@ -6,11 +6,12 @@ import {
   browserLocalPersistence,
 } from "firebase/auth";
 
-export const Auth = createContext(); 
+export const Auth = createContext();
 
 const Authcontext = ({ children }) => {
   const [user, setUser] = useState(null);
   const auth = getAuth();
+  
 
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence)
