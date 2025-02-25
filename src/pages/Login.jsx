@@ -1,6 +1,7 @@
 import { useState } from "react";
 import supabase from "../supa-client";
 import { useNavigate } from "react-router-dom";
+import Loginbg from "../assets/Loginbg.png";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -44,59 +45,74 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Log In</h2>
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+    <div
+      className="relative min-h-screen bg-center bg-cover bg-fixed"
+      style={{
+        backgroundImage: `url(${Loginbg})`,
+      }}
+    >
+      {/* Main content */}
+      <div className="relative  z-10 flex justify-center items-center h-screen">
+        <div className="bg-gray-100 shadow-2xl rounded-2xl px-8 py-4 w-md">
+          <div className="text-2xl font-bold p-2 text-center">
+            Welcome back!
+          </div>
+          <div className="text-3xl font-bold mb-4 text-center">Login</div>
+          {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 border rounded-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 border rounded-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition"
-            disabled={loading}
-          >
-            {loading ? "Logging In..." : "Log In"}
-          </button>
-        </form>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="px-2 font-extralight text-xl">Name</div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full p-3 mb-4 border bg-white rounded-xl"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <div className="px-2 font-light text-xl">Password</div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full p-3 mb-4 border bg-white rounded-xl"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-gray-600 rounded  text-white py-3  hover:bg-black transition"
+              disabled={loading}
+            >
+              {loading ? "Logging In..." : "Log In"}
+            </button>
+          </form>
 
-        <div className="mt-6">
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition"
-            disabled={loading}
-          >
-            {loading ? "Redirecting to Google..." : "Log In with Google"}
-          </button>
+          <div className="mt-6">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center p-3 justify-center border border-gray-400 bg-gray-100 text-gray-900 hover:text-gray-100 hover:bg-black rounded transition-all duration-300"
+            >
+              <img
+                src="https://www.svgrepo.com/show/355037/google.svg"
+                alt="Google Icon"
+                className="w-5 h-5 mr-2 "
+              />
+              Sign in with Google
+            </button>
+          </div>
+
+          <p className="text-center mt-4">
+            Don't have an account?{" "}
+            <a href="/signup" className="text-blue-500 hover:underline">
+              Sign Up
+            </a>
+          </p>
         </div>
-
-        <p className="text-center mt-4">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Sign Up
-          </a>
-        </p>
       </div>
     </div>
   );
 }
-
-
 
 // import React, { useContext, useState } from "react";
 // import { auth, provider, signInWithPopup } from "../config/firebase"; // Firebase imports
