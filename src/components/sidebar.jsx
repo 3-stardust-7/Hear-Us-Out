@@ -53,28 +53,32 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}
     >
       {/* Top Menu Items */}
-      <div className="flex-grow p-4">
-        <ul className={`mt-4 space-y-2 ${isOpen ? "block" : "hidden"}`}>
-          <li
-            //onClick={handleHome}
-            className="hover:bg-gray-700 p-2 rounded cursor-pointer"
-          >
-            Complaints
-          </li>
-         
-          <li
-            onClick={handleReg}
-            className="hover:bg-gray-700 p-2 rounded cursor-pointer"
-          >
-            Register
-          </li>
+      <div className="flex-grow ">
+        <ul className={` ${isOpen ? "block" : "hidden"}`}>
+          <div className="py-4 mr-8 flex justify-center">
+            <li
+              //onClick={handleHome}
+              className="hover:bg-gray-700  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
+            >
+              Complaints
+            </li>
+          </div>
+
+          <div className=" flex justify-center">
+            <li
+              onClick={handleReg}
+              className="hover:bg-gray-700 mr-8  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
+            >
+              Register
+            </li>
+          </div>
         </ul>
       </div>
 
       {/* Bottom Logout Item */}
-      <div className="p-4">
+      <div className="p-4  flex justify-center">
         <li
-          className={`hover:bg-red-600 p-2 rounded cursor-pointer  ${
+          className={`hover:bg-red-700 text-center w-full bg-red-500 p-2 rounded-lg cursor-pointer  ${
             isOpen ? "block" : "hidden"
           }`}
           onClick={handleLogout} // Trigger logout on click

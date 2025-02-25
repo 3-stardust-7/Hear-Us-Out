@@ -14,6 +14,7 @@ const User = () => {
         backgroundBlendMode: "overlay", // Combine the image and color
       }}
     >
+      
       <Sidebar />
       <div className="">
         <Profile />

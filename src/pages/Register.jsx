@@ -407,6 +407,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import registerbg from "../assets/registerbg.png";
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [complaintName, setComplaintName] = useState("");
@@ -483,19 +484,19 @@ const Register = () => {
       className="min-h-screen bg-cover bg-fixed bg-center"
       style={{
         backgroundImage: `url(${registerbg})`,
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
         backgroundBlendMode: "overlay",
       }}
     >
-      <div className="flex items-center justify-center min-h-screen bg-transparent">
+      <div className="flex items-center justify-center bg-transparent">
         <motion.div
-          className="max-w-md w-full p-6 bg-white shadow-lg rounded-lg"
+          className="max-w-md mt-20 w-full p-6 bg-black shadow-lg rounded-lg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <motion.h2
-            className="text-2xl font-bold mb-4 text-center"
+            className="text-2xl font-bold mb-4  text-white text-center"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -507,7 +508,7 @@ const Register = () => {
             <motion.div>
               <label
                 htmlFor="complaintName"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Complaint Name
               </label>
@@ -518,32 +519,32 @@ const Register = () => {
                 value={complaintName}
                 onChange={(e) => setComplaintName(e.target.value)}
                 required
-                className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full mt-2 p-2.5 text-white border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </motion.div>
 
             <motion.div>
               <label
                 htmlFor="problemDescription"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Problem Description
               </label>
               <textarea
                 id="problemDescription"
                 value={problemDescription}
-                placeholder="Clear description of complaint"
+                placeholder=" Clear description of complaint"
                 onChange={(e) => setProblemDescription(e.target.value)}
                 required
                 rows="4"
-                className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full mt-2 p-2 border text-white border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </motion.div>
 
             <motion.div>
               <label
                 htmlFor="image"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Upload Image
               </label>
@@ -552,7 +553,7 @@ const Register = () => {
                 type="file"
                 accept="image/png, image/jpeg"
                 required
-                className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+                className="w-full mt-2 p-2.5 border text-white border-gray-300 rounded-md"
               />
               <canvas ref={canvasRef} style={{ display: "none" }} />
             </motion.div>
@@ -561,7 +562,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300"
+                className="w-full rounded bg-blue-600 text-white p-2.5 my-2 hover:bg-blue-700 disabled:bg-gray-300"
               >
                 {loading ? "Submitting..." : "Submit Complaint"}
               </button>
@@ -569,6 +570,17 @@ const Register = () => {
           </motion.form>
         </motion.div>
       </div>
+      <Link to="/users" style={{ textDecoration: "none", color: "black" }}>
+        <div className=" flex justify-center  m-10">
+          <button
+            type="submit"
+            disabled={loading}
+            className="  w-40 rounded  text-white p-2 my-2 hover:bg-gray-600 bg-gray-900 disabled:bg-gray-300"
+          >
+            Back Home
+          </button>
+        </div>
+      </Link>
     </div>
   );
 };
