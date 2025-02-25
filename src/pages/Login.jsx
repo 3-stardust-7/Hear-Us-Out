@@ -61,7 +61,7 @@ export default function Login() {
           {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="px-2 font-extralight text-xl">Name</div>
+            <div className="px-2 font-extralight text-xl">Email</div>
             <input
               type="email"
               placeholder="Email"
@@ -81,17 +81,17 @@ export default function Login() {
             />
             <button
               type="submit"
-              className="w-full bg-gray-600 rounded  text-white py-3  hover:bg-black transition"
+              className="w-full bg-gray-700 rounded  text-white py-3  hover:bg-black transition"
               disabled={loading}
             >
               {loading ? "Logging In..." : "Log In"}
             </button>
           </form>
+          <hr />
 
-          <div className="mt-6">
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center p-3 justify-center border border-gray-400 bg-gray-100 text-gray-900 hover:text-gray-100 hover:bg-black rounded transition-all duration-300"
+              className="w-full shadow-md flex items-center p-3 justify-center border border-gray-00 bg-gray-100 text-gray-900 hover:text-gray-100 hover:bg-black rounded transition-all duration-300"
             >
               <img
                 src="https://www.svgrepo.com/show/355037/google.svg"
@@ -100,7 +100,6 @@ export default function Login() {
               />
               Sign in with Google
             </button>
-          </div>
 
           <p className="text-center mt-4">
             Don't have an account?{" "}

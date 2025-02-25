@@ -1,6 +1,7 @@
 import { useState } from "react";
 import supabase from "../supa-client";
 import { useNavigate, Link } from "react-router-dom";
+import image from "../assets/image.jpg";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -9,12 +10,13 @@ export default function Signup() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // ✅ Handle Email/Password Signup
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -29,46 +31,85 @@ export default function Signup() {
     }
   };
 
+  // ✅ Handle Google Signup
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    setLoading(false);
+
+    if (error) {
+      setError(`Google signup failed: ${error.message}`);
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-        <form onSubmit={handleSignup} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 border rounded-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 border rounded-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition"
-            disabled={loading}
-          >
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </form>
-        <p className="text-center mt-4">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Log In
-          </Link>
-        </p>
+    <div
+      className="relative min-h-screen bg-center bg-cover bg-fixed"
+      style={{
+        backgroundImage: `url(${image})`,
+      }}
+    >
+      <div className="flex justify-center items-center h-screen ">
+        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+          {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div className="px-2 font-light text-xl">Email</div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full p-3 mb-4 border bg-white rounded-xl"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <div className="px-2 font-light text-xl">Password</div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full p-3 mb-4 border bg-white rounded-xl"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-gray-700 rounded text-white py-3 hover:bg-black transition"
+              disabled={loading}
+            >
+              {loading ? "Signing Up..." : "Sign Up"}
+            </button>
+            <hr />
+            <button
+              type="button"
+              onClick={handleGoogleSignup}
+              className="w-full flex items-center p-3 justify-center border border-gray-400 bg-gray-100 text-gray-900 hover:text-gray-100 hover:bg-black rounded transition-all duration-300"
+            >
+              <img
+                src="https://www.svgrepo.com/show/355037/google.svg"
+                alt="Google Icon"
+                className="w-5 h-5 mr-2 "
+              />
+              Sign up with Google
+            </button>
+          </form>
+          <p className="text-center mt-4">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Log In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
+
+
+
+
 
 // import React, { useState } from "react";
 // import { useNavigate } from "react-router-dom";
