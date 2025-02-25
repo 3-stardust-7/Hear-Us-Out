@@ -4,34 +4,49 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Cards = () => {
   const [complaints, setComplaints] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const fetchComplaints = async () => {
-      const { data, error } = await supabase.from("complaints").select("*");
+    const fetchUserAndComplaints = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) setUserId(session.user.id);
+
+      const { data: complaintsData, error } = await supabase
+        .from("complaints")
+        .select("*")
+        .order("SLno", { ascending: true });
+
       if (error) console.error("Error fetching complaints:", error);
-      else setComplaints(data);
+      else setComplaints(complaintsData);
     };
-    fetchComplaints();
+
+    fetchUserAndComplaints();
   }, []);
 
-  const handleLike = async (SLno, liked, currentLikes) => {
+  const toggleLike = async (complaintId, liked, currentLikes) => {
+    if (!userId) return;
+
     const updatedLikes = liked ? currentLikes - 1 : currentLikes + 1;
 
     const { error } = await supabase
       .from("complaints")
-      .update({ likes: updatedLikes })
-      .eq("SLno", SLno);
+      .update({ likes_count: updatedLikes })
+      .eq("SLno", complaintId);
 
     if (error) console.error("Error updating likes:", error);
-    else {
-      setComplaints((prev) =>
-        prev.map((complaint) =>
-          complaint.SLno === SLno
-            ? { ...complaint, likes: updatedLikes, liked: !liked }
-            : complaint
-        )
-      );
-    }
+    else refreshComplaints();
+  };
+
+  const refreshComplaints = async () => {
+    const { data: updatedComplaints, error } = await supabase
+      .from("complaints")
+      .select("*")
+      .order("SLno", { ascending: true });
+
+    if (error) console.error("Error refreshing complaints:", error);
+    else setComplaints(updatedComplaints);
   };
 
   return (
@@ -44,7 +59,7 @@ const Cards = () => {
           No complaints found.
         </p>
       ) : (
-        <div className="grid mt-20 gap-5">
+        <div className="grid mt-20 gap-5 ">
           {complaints.map((complaint) => (
             <div
               key={complaint.SLno}
@@ -63,26 +78,25 @@ const Cards = () => {
                   className="h-96 rounded-md mt-4"
                 />
               )}
-              {/* ❤️ Like Button & Count */}
-              <div className="mt-4 text-4xl flex items-center gap-2">
+              <div className="mt-4 flex items-center gap-2 text-3xl">
                 <button
                   onClick={() =>
-                    handleLike(
+                    toggleLike(
                       complaint.SLno,
-                      complaint.liked,
-                      complaint.likes || 0
+                      complaint.likes_count > 0,
+                      complaint.likes_count
                     )
                   }
                   className="text-gray-500 hover:text-red-500 transition-all duration-300"
                 >
-                  {complaint.liked ? (
+                  {complaint.likes_count > 0 ? (
                     <AiFillHeart className="text-red-500" />
                   ) : (
                     <AiOutlineHeart />
                   )}
                 </button>
-                <span className="text-lg text-gray-700">
-                  {complaint.likes || 0} Likes
+                <span className="text-lg text-gray-700 font-semibold">
+                  {complaint.likes_count} Likes
                 </span>
               </div>
             </div>
