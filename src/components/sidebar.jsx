@@ -29,13 +29,14 @@ const Sidebar = () => {
     }
   };
 
-  // const handleHome=()=>{
-  //   try {
-  //      navigate("/");
-  //   } catch (error) {
-  //      console.error("Error going to home:", error);
-  //   }
-  // }
+    const handleVer = () => {
+      try {
+        navigate("/verified");
+      } catch (error) {
+        console.error("Error going to verified:", error);
+      }
+    };
+
 
   const handleReg = () => {
     try {
@@ -70,6 +71,15 @@ const Sidebar = () => {
               className="hover:bg-gray-700 mr-8  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
             >
               Register
+            </li>
+          </div>
+
+          <div className="py-4 mr-8 flex justify-center">
+            <li
+              onClick={handleVer}
+              className="hover:bg-gray-700  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
+            >
+              Verified
             </li>
           </div>
         </ul>

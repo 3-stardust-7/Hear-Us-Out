@@ -2,6 +2,9 @@ import { useState } from "react";
 import supabase from "../supa-client";
 import { useNavigate, Link } from "react-router-dom";
 import image from "../assets/image.jpg";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -25,10 +28,14 @@ export default function Signup() {
 
     if (error) {
       setError(error.message);
+      toast.error(error.message);
     } else {
-      alert("Signup successful! Check your email for the verification link.");
-      navigate("/login");
-    }
+      toast.success("Signup successful! Check your email for the verification link.");
+      
+            setTimeout(() => {
+              setLoading(false);
+              navigate("/login");
+            }, 2000);}
   };
 
   // ✅ Handle Google Signup
