@@ -1,7 +1,6 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
 import Cards from "../components/Cards";
-import Profile from "../components/profile";
 import w from "../assets/w.png"
 
 const User = () => {
@@ -14,12 +13,10 @@ const User = () => {
         backgroundBlendMode: "overlay", // Combine the image and color
       }}
     >
-      
-      <Sidebar />
-      <div className="">
-        <Profile />
+      <div className="relative  z-50">
+        <Sidebar />
       </div>
-      <div className="p-4 w-2/3 mx-auto">
+      <div className=" p-4 lg:w-2/3 sm:w-5/6 m-auto">
         <Cards />
       </div>
     </div>

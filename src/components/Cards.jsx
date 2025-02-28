@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import supabase from "../supa-client";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
+
 
 const Cards = () => {
   const [complaints, setComplaints] = useState([]);
@@ -50,7 +52,7 @@ const Cards = () => {
   };
 
   return (
-    <div className="max-3/4 mx-auto p-4">
+    <div className="max-3/4 p-4">
       <div className="text-5xl mb-20 font-bold text-white text-center">
         Complaint Records
       </div>
@@ -98,6 +100,12 @@ const Cards = () => {
                 <span className="text-lg text-gray-700 font-semibold">
                   {complaint.likes_count} Likes
                 </span>
+              </div>
+              <div className="absolute right-6 top-24 text-5xl">
+                <RiVerifiedBadgeFill />
+              </div>
+              <div className="comments">
+                <input type="text outline" />
               </div>
             </div>
           ))}
