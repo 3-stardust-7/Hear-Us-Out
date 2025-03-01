@@ -3,29 +3,58 @@ import supabase from "../supa-client";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 
-
 const Cards = () => {
   const [complaints, setComplaints] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [mlScore, setMlScore] = useState(null);
 
-  useEffect(() => {
-    const fetchUserAndComplaints = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) setUserId(session.user.id);
+useEffect(() => {
+  const fetchUserAndComplaints = async () => {
+    // Fetch user session
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
+    if (sessionError) {
+      console.error("Error fetching session:", sessionError);
+      return;
+    }
 
-      const { data: complaintsData, error } = await supabase
+    const userId = sessionData?.session?.user?.id;
+    if (userId) setUserId(userId);
+
+    // Fetch complaints
+    const { data: complaintsData, error: complaintsError } = await supabase
+      .from("complaints")
+      .select("*")
+      .order("SLno", { ascending: true });
+
+    if (complaintsError) {
+      console.error("Error fetching complaints:", complaintsError);
+      return;
+    }
+
+    setComplaints(complaintsData);
+
+    // Fetch ML score for the logged-in user
+    if (userId) {
+      const { data: userComplaint, error: mlError } = await supabase
         .from("complaints")
-        .select("*")
-        .order("SLno", { ascending: true });
+        .select("score")
+        .eq("u_id", userId)
+        .order("SLno", { ascending: false }) // Get the latest complaint
+        .limit(1)
+        .single();
 
-      if (error) console.error("Error fetching complaints:", error);
-      else setComplaints(complaintsData);
-    };
+      if (mlError) {
+        console.error("Error fetching ML score:", mlError);
+      } else {
+        setMlScore(userComplaint?.score);
+      }
+    }
+  };
 
-    fetchUserAndComplaints();
-  }, []);
+  fetchUserAndComplaints();
+}, []);
+
 
   const toggleLike = async (complaintId, liked, currentLikes) => {
     if (!userId) return;
@@ -101,11 +130,16 @@ const Cards = () => {
                   {complaint.likes_count} Likes
                 </span>
               </div>
-              <div className="absolute right-6 top-24 text-5xl">
+
+              {mlScore !== null && (
+                <div className="absolute right-6 top-8  p-2 w-12 text-center rounded-2xl text-xl bg-black text-white font-bold">
+                   {mlScore}
+                </div>
+              )}
+
+              {/* verified_badge */}
+              <div className="absolute right-6 top-24 text-green-600 text-5xl">
                 <RiVerifiedBadgeFill />
-              </div>
-              <div className="comments">
-                <input type="text outline" />
               </div>
             </div>
           ))}

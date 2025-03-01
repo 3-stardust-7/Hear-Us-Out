@@ -49,7 +49,7 @@ const Sidebar = () => {
   return (
     <div
       className={`fixed border-10 rounded-4xl top-[7%] left-0 h-[90%] bg-black text-white transition-all duration-300 ease-in-out flex flex-col
-        ${isOpen ? "lg:w-64 sm:w-44" : "lg:w-15 sm:w-10"}`}
+        ${isOpen ? "lg:w-64 sm:w-44 " : "lg:w-15 sm:w-10"}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

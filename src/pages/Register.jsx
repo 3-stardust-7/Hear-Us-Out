@@ -408,6 +408,7 @@ import { motion } from "framer-motion";
 import registerbg from "../assets/registerbg.png";
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
+import { sendReq } from "../functions/sendReq";
 
 const Register = () => {
   const [complaintName, setComplaintName] = useState("");
@@ -433,51 +434,59 @@ const Register = () => {
 
   if (!user) return null;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const fileInput = document.getElementById("image");
-      const file = fileInput.files[0];
+  try {
+    const fileInput = document.getElementById("image");
+    const file = fileInput.files[0];
 
-      if (!file) {
-        alert("Please upload an image.");
-        setLoading(false);
-        return;
-      }
-
-      const filePath = `${user.id}/${uuidv4()}`;
-      const { error: uploadError } = await supabase.storage
-        .from("complaint-images")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const imageUrl = `${
-        import.meta.env.VITE_SUPABASE_URL
-      }/storage/v1/object/public/complaint-images/${filePath}`;
-
-      const { error: insertError } = await supabase.from("complaints").insert([
-        {
-          name: complaintName,
-          description: problemDescription,
-          u_id: user.id, // ✅ Supabase user ID
-          image: imageUrl,
-        },
-      ]);
-
-      if (insertError) throw insertError;
-
-      alert("Complaint registered successfully!");
-      navigate("/users");
-    } catch (err) {
-      console.error("Error submitting complaint:", err);
-      alert("Error submitting complaint.");
-    } finally {
+    if (!file) {
+      alert("Please upload an image.");
       setLoading(false);
+      return;
     }
-  };
+
+    const filePath = `${user.id}/${uuidv4()}`;
+    const { error: uploadError } = await supabase.storage
+      .from("complaint-images")
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const imageUrl = `${
+      import.meta.env.VITE_SUPABASE_URL
+    }/storage/v1/object/public/complaint-images/${filePath}`;
+
+    const { error: insertError } = await supabase.from("complaints").insert([
+      {
+        name: complaintName,
+        description: problemDescription,
+        u_id: user.id, // ✅ Supabase user ID
+        image: imageUrl,
+      },
+    ]);
+
+    if (insertError) throw insertError;
+
+    alert("Complaint registered successfully!");
+
+    // Call the ML API after complaint is registered
+    const prediction = await sendReq();
+    console.log("Prediction result:", prediction);
+
+    navigate("/users");
+  } catch (err) {
+    console.error("Error submitting complaint:", err);
+    alert("Error submitting complaint.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   return (
     <div
