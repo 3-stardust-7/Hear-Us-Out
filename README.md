@@ -1,10 +1,9 @@
-<h1>Hear-Us-Out</h1> 🎯
+<h1>🎙 Hear-Us-Out 🎤</h1> 
 
-<h2>Team Name: The Hack Pack</h2>
+<h2>Team Name: The Hack Pack💥</h2>
 
-Team Members
-Member 1: Pallavi Madhu - Model Engineering College
-Member 2: V Kirubha - Model Engineering College
+Member 1: Pallavi Madhu - Model Engineering College<br/>
+Member 2: V Kirubha - Model Engineering College<br/>
 Member 3: Niranjana Ajay - Model Engineering College
 
 <h2>Project Description</h2>
@@ -41,10 +40,6 @@ We explored various tech stacks, collaborated as a team, and successfully made i
 
 <p>A big shoutout to my incredible teammates, <strong>Niranjana Ajay</strong> and <strong>Pallavi Madhu</strong>, for their support and contributions! 🚀🙌</p>
 
-<h2>Presentation Photos</h2>
+<h2>Presentation Photo</h2>
 <img src="src\assets\HackPack.jpg" alt ="SignIn page"/>
 
-Project Demo
-Video
-<video src ="src\assets\Screen Recording 2025-02-02 075929.mp4"></video>
-The landing page is an introduction to our website "Hear-Us-Out".Upon clicking "get started", the user gets redirected to the sign-in page.Upon signing then, they get redirected to their dashboard where they can register a complaint.Upon submission,the Ml model predicts the score and the complaint along with the score gets displayed on the dashboard.Users can set thier profile picture.Logout functionality has also been added.
