@@ -24,7 +24,7 @@ Tools used:GitHub, Vercel
 
 <h2>Project Documentation</h2>
 
-This is our Landing page
+Landing page
 <img src="src\assets\Landing.png" alt="Landing Page"/>
 
 Sign Up page
