@@ -1,56 +1,60 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // ✅ Import useLocation
 import supabase from "../supa-client";
 
 export const Auth = createContext();
 
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ Get current page location
 
   useEffect(() => {
+    console.log("Checking authentication...");
+
     const checkUser = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      console.log("Session Data:", session);
+
       if (session?.user) {
         setUser(session.user);
       }
+      setLoading(false);
     };
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        console.log("Auth State Changed:", session);
         setUser(session?.user || null);
-        if (!session?.user) navigate("/login"); // Redirect to login after logout
+
+        // ✅ Only redirect if the user is trying to access a protected page
+        const protectedRoutes = ["/users", "/verified"];
+        if (!session?.user && protectedRoutes.includes(location.pathname)) {
+          navigate("/login");
+        }
       }
     );
 
     checkUser();
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [navigate]);
+    return () => authListener?.unsubscribe?.();
+  }, [navigate, location]);
 
-  // ✅ Logout function
-  const logout = async () => {
-    await supabase.auth.signOut();
-    setUser(null); // Clear user state
-    navigate("/login"); // Redirect to login page
-  };
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Checking authentication...
+      </div>
+    );
+  }
 
-  return (
-    <Auth.Provider value={{ user, setUser, logout }}>{children}</Auth.Provider>
-  );
+  return <Auth.Provider value={{ user, setUser }}>{children}</Auth.Provider>;
 };
 
 export default AuthContextProvider;
-
-
-
-
-
-
 
 //Krish code
 // import React, { createContext, useState } from "react";
