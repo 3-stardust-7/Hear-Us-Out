@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom"; // ✅ Import useLocation
 import supabase from "../supa-client";
+import { FaSpinner } from "react-icons/fa"; 
 
 export const Auth = createContext();
 
@@ -24,6 +25,7 @@ const AuthContextProvider = ({ children }) => {
       }
       setLoading(false);
     };
+    
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -46,7 +48,7 @@ const AuthContextProvider = ({ children }) => {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
-        Checking authentication...
+        <FaSpinner className="animate-spin text-4xl text-gray-700" />
       </div>
     );
   }
