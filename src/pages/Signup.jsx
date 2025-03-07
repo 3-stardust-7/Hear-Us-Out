@@ -1,10 +1,9 @@
 import { useState } from "react";
-import supabase from "../supa-client";
 import { useNavigate, Link } from "react-router-dom";
-import image from "../assets/image.jpg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import supabase from "../supa-client";
+import image from "../assets/image.jpg";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -13,13 +12,34 @@ export default function Signup() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // ✅ Save user details to Supabase 'users' table
+  const saveUserToDatabase = async (user) => {
+    try {
+      const { error } = await supabase.from("users").upsert([
+        {
+          u_id: user.id, // Unique ID from Supabase Auth
+          name: user.user_metadata.full_name || "New User",
+          email: user.email,
+        },
+      ]);
+
+      if (error) {
+        console.error("Error saving user to database:", error);
+      } else {
+        console.log("User saved successfully.");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  };
+
   // ✅ Handle Email/Password Signup
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -30,35 +50,45 @@ export default function Signup() {
       setError(error.message);
       toast.error(error.message);
     } else {
-      toast.success("Signup successful! Check your email for the verification link.");
-      
-            setTimeout(() => {
-              setLoading(false);
-              navigate("/login");
-            }, 2000);}
+      toast.success("Signup successful! Check your email for verification.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    }
   };
 
   // ✅ Handle Google Signup
-  const handleGoogleSignup = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-    setLoading(false);
+const handleGoogleSignup = async () => {
+  setLoading(true);
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "http://localhost:5173/users", // ✅ Ensure redirection to /users
+    },
+  });
 
-    if (error) {
-      setError(`Google signup failed: ${error.message}`);
+  setLoading(false);
+
+  if (error) {
+    setError(`Google signup failed: ${error.message}`);
+  }
+};
+
+
+  // ✅ Handle authentication state change
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) {
+      await saveUserToDatabase(session.user);
+      navigate("/users"); // Redirect after successful login
     }
-  };
+  });
 
   return (
     <div
       className="relative min-h-screen bg-center bg-cover bg-fixed"
-      style={{
-        backgroundImage: `url(${image})`,
-      }}
+      style={{ backgroundImage: `url(${image})` }}
     >
-      <div className="flex justify-center items-center h-screen ">
+      <div className="flex justify-center items-center h-screen">
         <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
           {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
@@ -93,13 +123,14 @@ export default function Signup() {
               type="button"
               onClick={handleGoogleSignup}
               className="w-full flex items-center p-3 justify-center border border-gray-400 bg-gray-100 text-gray-900 hover:text-gray-100 hover:bg-black rounded transition-all duration-300"
+              disabled={loading}
             >
               <img
                 src="https://www.svgrepo.com/show/355037/google.svg"
                 alt="Google Icon"
-                className="w-5 h-5 mr-2 "
+                className="w-5 h-5 mr-2"
               />
-              Sign up with Google
+              {loading ? "Processing..." : "Sign up with Google"}
             </button>
           </form>
           <p className="text-center mt-4">
@@ -113,10 +144,6 @@ export default function Signup() {
     </div>
   );
 }
-
-
-
-
 
 // import React, { useState } from "react";
 // import { useNavigate } from "react-router-dom";

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { auth, signOut } from "../config/firebase"; // Import signOut from Firebase Auth
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate } from "react-router-dom";
+import supabase from "../supa-client"; // Import Supabase client
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
-  const navigate = useNavigate(); // useNavigate for page redirection
+  const navigate = useNavigate();
 
   const handleMouseEnter = () => {
     setIsOpen(true);
@@ -17,34 +17,20 @@ const Sidebar = () => {
     setTimeoutId(id);
   };
 
+  // ✅ Logout Function (Using Supabase)
   const handleLogout = async () => {
     try {
-      // Sign out from Firebase
-      await signOut(auth);
+      await supabase.auth.signOut();
       console.log("User logged out successfully");
-      // Redirect to login page
-      navigate("/login"); // or to any other page
+      navigate("/login"); // Redirect to login page
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
 
-    const handleVer = () => {
-      try {
-        navigate("/verified");
-      } catch (error) {
-        console.error("Error going to verified:", error);
-      }
-    };
-
-
-  const handleReg = () => {
-    try {
-      navigate("/register");
-    } catch (error) {
-      console.error("Error going to home:", error);
-    }
-  };
+  // ✅ Navigation Handlers
+  const handleVer = () => navigate("/verified");
+  const handleReg = () => navigate("/register");
 
   return (
     <div
@@ -54,21 +40,18 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}
     >
       {/* Top Menu Items */}
-      <div className="flex-grow ">
-        <ul className={` ${isOpen ? "block" : "hidden"}`}>
+      <div className="flex-grow">
+        <ul className={`${isOpen ? "block" : "hidden"}`}>
           <div className="py-4 mr-8 flex justify-center">
-            <li
-              //onClick={handleHome}
-              className="hover:bg-gray-700  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
-            >
+            <li className="hover:bg-gray-700 text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer">
               Complaints
             </li>
           </div>
 
-          <div className=" flex justify-center">
+          <div className="flex justify-center">
             <li
               onClick={handleReg}
-              className="hover:bg-gray-700 mr-8  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
+              className="hover:bg-gray-700 mr-8 text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
             >
               Register
             </li>
@@ -77,7 +60,7 @@ const Sidebar = () => {
           <div className="py-4 mr-8 flex justify-center">
             <li
               onClick={handleVer}
-              className="hover:bg-gray-700  text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
+              className="hover:bg-gray-700 text-center w-full bg-gray-500 p-2 rounded-lg cursor-pointer"
             >
               Verified
             </li>
@@ -86,9 +69,9 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom Logout Item */}
-      <div className="p-4  flex justify-center">
+      <div className="p-4 flex justify-center">
         <li
-          className={`hover:bg-red-700 text-center w-full bg-red-500 p-2 rounded-lg cursor-pointer  ${
+          className={`hover:bg-red-700 text-center w-full bg-red-500 p-2 rounded-lg cursor-pointer ${
             isOpen ? "block" : "hidden"
           }`}
           onClick={handleLogout} // Trigger logout on click

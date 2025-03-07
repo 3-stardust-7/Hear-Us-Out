@@ -1,38 +1,56 @@
 import React, { createContext, useState, useEffect } from "react";
-import {
-  getAuth,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence,
-} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supa-client";
 
 export const Auth = createContext();
 
-const Authcontext = ({ children }) => {
+const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const auth = getAuth();
-  
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
-        return onAuthStateChanged(auth, (user) => {
-          if (user) {
-            setUser(user);
-          } else {
-            setUser(null);
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error setting persistence:", error);
-      });
-  }, [auth]);
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+      }
+    };
 
-  return <Auth.Provider value={[user, setUser]}>{children}</Auth.Provider>;
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+        if (!session?.user) navigate("/login"); // Redirect to login after logout
+      }
+    );
+
+    checkUser();
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
+
+  // ✅ Logout function
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null); // Clear user state
+    navigate("/login"); // Redirect to login page
+  };
+
+  return (
+    <Auth.Provider value={{ user, setUser, logout }}>{children}</Auth.Provider>
+  );
 };
 
-export default Authcontext; //  Now correctly defined and exported
+export default AuthContextProvider;
+
+
+
+
+
+
 
 //Krish code
 // import React, { createContext, useState } from "react";
