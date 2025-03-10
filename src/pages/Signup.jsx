@@ -63,7 +63,10 @@ const handleGoogleSignup = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:5173/login", // ✅ Ensure redirection to /users
+      redirectTo: "http://localhost:5173/login",
+      queryParams: {
+        prompt: "select_account", // This forces the account chooser popup
+      }, // ✅ Ensure redirection to /users
     },
   });
 
